@@ -16,6 +16,8 @@
 #include "iree/compiler/Codegen/Dialect/GPU/ExternalInterfaces/GPUPipelineExternalModels.h"
 #include "iree/compiler/Codegen/Dialect/GPU/IR/IREEGPUAttrs.h"
 #include "iree/compiler/Codegen/Dialect/GPU/Transforms/Passes.h"
+#include "iree/compiler/Codegen/Dialect/PCF/Transforms/Passes.h"
+#include "iree/compiler/Codegen/Dialect/VectorExt/Transforms/Passes.h"
 #include "iree/compiler/Codegen/LLVMGPU/Passes.h"
 #include "iree/compiler/Codegen/LLVMGPU/ROCDLPasses.h"
 #include "iree/compiler/Codegen/Utils/GPUUtils.h"
@@ -958,6 +960,11 @@ static void addLowerToLLVMGPUPasses(OpPassManager &modulePassManager,
   modulePassManager.addPass(createCSEPass());
 
   modulePassManager.addPass(createLowerUKernelOpsToCallsPass());
+  // Lower PCF ops to SCF.
+  FunctionLikeNest(modulePassManager)
+      .addPass(IREE::PCF::createResolveTokensPass)
+      .addPass(IREE::PCF::createConvertSRefToMemRefPass)
+      .addPass(IREE::PCF::createLowerStructuralPCFPass);
 
   FunctionLikeNest(modulePassManager)
       // LinalgExt -> SCF
