@@ -105,3 +105,4 @@ artifacts/
 # Side effects of local patching/merging
 *.orig
 *.rej
+/*.vmfb
