@@ -16,7 +16,7 @@
       max_load_instruction_bits = 128, simds_per_wgp = 4,
       vgpr_space_bits = 32768, workgroup_memory_bank_count = 64>>, ukernels = "none"}>
 
-#translation_info = #iree_codegen.translation_info<pipeline = LLVMGPUTileAndFuse
+#translation_info = #iree_codegen.translation_info<pipeline = #iree_gpu.pipeline<TileAndFuse>
         workgroup_size = [128, 1, 1] subgroup_size = 32,
         // Padding is done via TDM.
         {gpu_pipeline_options =
@@ -152,13 +152,13 @@ module attributes {stream.affinity.default = #hal.device.affinity<@__device_0>} 
               %a0_desc_prologue = amdgpu.make_dma_descriptor %a0_base_prologue
                 globalSize [%m_tile_size, %k0_tile_size_prologue]
                 globalStride [%KL, 1]
-                sharedSize [%c64, %c128]
+                sharedSize [64, 128]
                 padShared (%c4_i32 every %c64_i32)
                 : !amdgpu.tdm_base<f16> -> !amdgpu.tdm_descriptor<f16>
               %b0_desc_prologue = amdgpu.make_dma_descriptor %b0_base_prologue
                 globalSize [%n_tile_size, %k0_tile_size_prologue]
                 globalStride [%KL, 1]
-                sharedSize [%c64, %c128]
+                sharedSize [64, 128]
                 padShared (%c4_i32 every %c64_i32)
                 : !amdgpu.tdm_base<f16> -> !amdgpu.tdm_descriptor<f16>
               amdgpu.tensor_load_to_lds %a0_desc_prologue : !amdgpu.tdm_descriptor<f16>
@@ -186,13 +186,13 @@ module attributes {stream.affinity.default = #hal.device.affinity<@__device_0>} 
                   %a1_desc = amdgpu.make_dma_descriptor %a1_base
                     globalSize [%m_tile_size, %k1_tile_size]
                     globalStride [%KL, 1]
-                    sharedSize [%c64, %c128]
+                    sharedSize [64, 128]
                     padShared (%c4_i32 every %c64_i32)
                     : !amdgpu.tdm_base<f16> -> !amdgpu.tdm_descriptor<f16>
                   %b1_desc = amdgpu.make_dma_descriptor %b1_base
                     globalSize [%n_tile_size, %k1_tile_size]
                     globalStride [%KL, 1]
-                    sharedSize [%c64, %c128]
+                    sharedSize [64, 128]
                     padShared (%c4_i32 every %c64_i32)
                     : !amdgpu.tdm_base<f16> -> !amdgpu.tdm_descriptor<f16>
 
@@ -234,13 +234,13 @@ module attributes {stream.affinity.default = #hal.device.affinity<@__device_0>} 
                   %a0_desc = amdgpu.make_dma_descriptor %a0_base
                     globalSize [%m_tile_size, %k0_tile_size]
                     globalStride [%KL, 1]
-                    sharedSize [%c64, %c128]
+                    sharedSize [64, 128]
                     padShared (%c4_i32 every %c64_i32)
                     : !amdgpu.tdm_base<f16> -> !amdgpu.tdm_descriptor<f16>
                   %b0_desc = amdgpu.make_dma_descriptor %b0_base
                     globalSize [%n_tile_size, %k0_tile_size]
                     globalStride [%KL, 1]
-                    sharedSize [%c64, %c128]
+                    sharedSize [64, 128]
                     padShared (%c4_i32 every %c64_i32)
                     : !amdgpu.tdm_base<f16> -> !amdgpu.tdm_descriptor<f16>
 
